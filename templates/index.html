@@ -6,772 +6,1473 @@
 <title>TikTok Automation by Umair Hassan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0f;
-    --surface: #14141d;
-    --surface-2: #1b1b27;
-    --border: #2a2a38;
-    --cyan: #25f4ee;
-    --pink: #fe2c55;
-    --text: #f5f5fa;
-    --text-muted: #8b8b9e;
-    --success: #2ce87a;
-    --radius-lg: 20px;
+    --bg: #fafafa;
+    --bg-dark: #0d0d12;
+    --surface: #ffffff;
+    --surface-elevated: #ffffff;
+    --border: rgba(0,0,0,0.08);
+    --border-strong: rgba(0,0,0,0.15);
+    --text: #1a1a2e;
+    --text-secondary: #6b6b8d;
+    --text-muted: #9999b3;
+    --accent: #ff2d55;
+    --accent-hover: #e6294d;
+    --accent-light: rgba(255,45,85,0.08);
+    --secondary: #00c7be;
+    --secondary-light: rgba(0,199,190,0.1);
+    --success: #34c759;
+    --success-bg: rgba(52,199,89,0.1);
+    --error: #ff3b30;
+    --error-bg: rgba(255,59,48,0.08);
+    --radius-xl: 24px;
+    --radius-lg: 16px;
     --radius-md: 12px;
+    --radius-sm: 8px;
+    --radius-full: 9999px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+    --shadow-xl: 0 24px 64px rgba(0,0,0,0.16);
     --font-display: 'Space Grotesk', sans-serif;
-    --font-body: 'Inter', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
+    --font-body: 'DM Sans', sans-serif;
+    --transition-fast: 0.15s cubic-bezier(0.4,0,0.2,1);
+    --transition-smooth: 0.25s cubic-bezier(0.4,0,0.2,1);
+    --transition-bounce: 0.4s cubic-bezier(0.34,1.56,0.64,1);
   }
 
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-body);
-    -webkit-font-smoothing: antialiased;
-  }
+  html { font-size: 16px; }
 
   body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
     min-height: 100vh;
-    background-image:
-      radial-gradient(600px circle at 15% -5%, rgba(37, 244, 238, 0.10), transparent 55%),
-      radial-gradient(600px circle at 85% 0%, rgba(254, 44, 85, 0.10), transparent 55%);
-    padding: clamp(20px, 5vw, 56px) 16px 64px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  .page {
-    width: 100%;
-    max-width: 560px;
+  .app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(250,250,250,0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px;
+  }
+
+  .header-inner {
+    max-width: 600px;
     margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
   }
 
-  /* ---------- Brand header ---------- */
   .brand {
     display: flex;
     align-items: center;
-    gap: 14px;
-    margin-bottom: clamp(24px, 5vw, 36px);
+    gap: 12px;
   }
 
-  .brand-mark {
-    flex: none;
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
+  .brand-icon {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, var(--accent), var(--secondary));
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(255,45,85,0.3);
     position: relative;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
+    overflow: hidden;
   }
-  .brand-mark svg { position: absolute; inset: 0; margin: auto; }
+
+  .brand-icon::before {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: var(--bg-dark);
+    border-radius: calc(var(--radius-md) - 2px);
+  }
+
+  .brand-icon svg {
+    position: relative;
+    z-index: 1;
+  }
 
   .brand-text h1 {
     font-family: var(--font-display);
+    font-size: 1.1rem;
     font-weight: 700;
-    font-size: clamp(1.15rem, 4.5vw, 1.5rem);
     letter-spacing: -0.02em;
-    margin: 0;
-    position: relative;
-    display: inline-block;
     color: var(--text);
   }
-  /* Signature: chromatic double-exposure title, echoing TikTok's own
-     cyan/pink offset visual language without reproducing its logo mark. */
-  .brand-text h1 .layer {
-    position: absolute;
-    top: 0; left: 0;
-    z-index: -1;
-    filter: blur(0.2px);
-  }
-  .brand-text h1 .layer--cyan { color: var(--cyan); transform: translate(-2px, 1.5px); opacity: 0.85; }
-  .brand-text h1 .layer--pink { color: var(--pink); transform: translate(2px, -1.5px); opacity: 0.85; }
 
   .brand-text p {
-    margin: 3px 0 0;
-    font-size: 0.85rem;
+    font-size: 0.7rem;
     color: var(--text-muted);
-  }
-  .brand-text p strong { color: var(--text); font-weight: 600; }
-
-  /* ---------- Card ---------- */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: clamp(18px, 4vw, 28px);
-    box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.6);
-  }
-
-  .banner {
-    padding: 12px 14px;
-    border-radius: var(--radius-md);
-    margin-bottom: 16px;
-    font-size: 0.88rem;
-    line-height: 1.4;
-    border: 1px solid;
-  }
-  .banner.error { background: rgba(254, 44, 85, 0.08); border-color: rgba(254, 44, 85, 0.35); color: #ff8fa3; }
-
-  .field { margin-bottom: 22px; }
-  .field:last-child { margin-bottom: 0; }
-
-  .field-label {
-    display: block;
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 0.82rem;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 9px;
-  }
-
-  .field-optional {
-    text-transform: none;
     font-weight: 500;
-    letter-spacing: normal;
-    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
-  /* ---------- Upload dropzone ---------- */
-  .dropzone {
-    position: relative;
-    border: 1.5px dashed var(--border);
+  .status-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--success-bg);
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--success);
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--success);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+  }
+
+  /* ===== MAIN CONTENT ===== */
+  .main {
+    flex: 1;
+    padding: 24px 16px 120px;
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  /* ===== ERROR BANNER ===== */
+  .error-banner {
+    background: var(--error-bg);
+    border: 1px solid rgba(255,59,48,0.2);
     border-radius: var(--radius-md);
-    background: var(--surface-2);
-    min-height: 190px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.875rem;
+    color: var(--error);
+    animation: slideDown 0.4s var(--transition-smooth);
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .error-banner svg { flex-shrink: 0; margin-top: 2px; }
+
+  /* ===== FORM CARD ===== */
+  .form-card {
+    background: var(--surface);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    transition: box-shadow var(--transition-smooth);
+  }
+
+  .form-card:hover { box-shadow: var(--shadow-lg); }
+
+  /* ===== UPLOAD SECTION ===== */
+  .upload-section {
+    position: relative;
+    background: linear-gradient(180deg, var(--surface-elevated) 0%, #f8f8fa 100%);
+  }
+
+  .upload-area {
+    position: relative;
+    min-height: 280px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    text-align: center;
-    padding: 20px;
+    padding: 32px 24px;
     cursor: pointer;
-    transition: border-color 0.15s ease, background 0.15s ease;
-    overflow: hidden;
+    transition: background var(--transition-fast);
   }
-  .dropzone:hover, .dropzone.is-dragover {
-    border-color: var(--cyan);
-    background: #16161f;
-  }
-  .dropzone:focus-visible {
-    outline: 2px solid var(--cyan);
-    outline-offset: 2px;
-  }
-  .dropzone input[type="file"] {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
-  }
-  .dropzone-icon {
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(135deg, rgba(37,244,238,0.15), rgba(254,44,85,0.15));
-    border: 1px solid var(--border);
-  }
-  .dropzone-title { font-weight: 600; font-size: 0.95rem; }
-  .dropzone-hint { color: var(--text-muted); font-size: 0.8rem; }
 
-  .dropzone-preview {
+  .upload-area:not(.has-media):hover {
+    background: rgba(255,45,85,0.02);
+  }
+
+  .upload-area.has-media { min-height: auto; padding: 0; }
+
+  .upload-prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+    pointer-events: none;
+  }
+
+  .upload-area.has-media .upload-prompt { display: none; }
+
+  .upload-icon-wrap {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--accent-light), var(--secondary-light));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .upload-icon-wrap::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px dashed rgba(255,45,85,0.2);
+    animation: rotate 20s linear infinite;
+  }
+
+  @keyframes rotate {
+    to { transform: rotate(360deg); }
+  }
+
+  .upload-title {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .upload-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    max-width: 220px;
+    line-height: 1.5;
+  }
+
+  .upload-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .upload-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    background: var(--surface);
+    border: 1.5px solid var(--border-strong);
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: var(--font-body);
+  }
+
+  .upload-btn:hover {
+    border-color: var(--accent);
+    background: var(--accent-light);
+    transform: translateY(-1px);
+  }
+
+  .upload-btn.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .upload-btn.primary:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+  }
+
+  /* Preview */
+  .upload-preview {
     display: none;
     position: relative;
     width: 100%;
-    height: 100%;
-    min-height: 190px;
   }
-  .dropzone-preview video,
-  .dropzone-preview img {
-    width: 100%;
-    height: 100%;
-    max-height: 320px;
-    object-fit: cover;
-    border-radius: calc(var(--radius-md) - 2px);
+
+  .upload-area.has-media .upload-preview {
     display: block;
   }
-  .dropzone-preview .file-chip {
-    position: absolute;
-    left: 10px; bottom: 10px;
-    background: rgba(10,10,15,0.75);
-    backdrop-filter: blur(6px);
-    padding: 6px 10px;
-    border-radius: 8px;
-    font-size: 0.75rem;
-    font-family: var(--font-mono);
-    max-width: calc(100% - 60px);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .dropzone-preview .file-remove {
-    position: absolute;
-    right: 10px; top: 10px;
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    background: rgba(10,10,15,0.75);
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(255,255,255,0.15);
-    color: var(--text);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    font-size: 1rem;
-    line-height: 1;
-    z-index: 2;
-  }
-  .dropzone.has-file .dropzone-empty { display: none; }
-  .dropzone.has-file .dropzone-preview { display: block; }
 
-  /* ---------- Pick buttons (separate image/video pickers for Android reliability) ---------- */
-  .pick-buttons {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
+  .preview-media {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    display: block;
   }
-  .pick-btn {
-    flex: 1;
+
+  .preview-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    pointer-events: none;
+  }
+
+  .preview-type {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(8px);
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .preview-remove {
+    pointer-events: auto;
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,0.9);
+    border: none;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 12px 10px;
-    background: var(--surface-2);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-md);
-    color: var(--text);
-    font-family: var(--font-body);
-    font-weight: 600;
-    font-size: 0.85rem;
     cursor: pointer;
-    transition: border-color 0.15s ease, background 0.15s ease;
-  }
-  .pick-btn:hover, .pick-btn:focus-visible {
-    border-color: var(--cyan);
-    background: #16161f;
-    outline: none;
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-md);
   }
 
-  /* ---------- Caption ---------- */
-  textarea, select {
-    width: 100%;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: 0.95rem;
-    padding: 12px 14px;
-    resize: vertical;
-    transition: border-color 0.15s ease;
-  }
-  textarea::placeholder { color: var(--text-muted); }
-  textarea:focus, select:focus, .dropzone:focus-within {
-    outline: none;
-    border-color: var(--cyan);
-  }
-  .char-count {
-    text-align: right;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    margin-top: 6px;
+  .preview-remove:hover {
+    background: white;
+    transform: scale(1.1);
   }
 
-  select {
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%238b8b9e' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 38px;
-  }
-
-  /* ---------- Accounts ---------- */
-  .accounts {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    max-height: 240px;
-    overflow-y: auto;
-    padding-right: 2px;
-  }
-  .account-row {
+  .preview-info {
+    padding: 16px 20px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 11px 12px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    background: var(--surface-2);
-    cursor: pointer;
-    transition: border-color 0.15s ease, background 0.15s ease;
-  }
-  .account-row:hover { border-color: #3a3a4c; }
-  .account-row.is-checked {
-    border-color: var(--cyan);
-    background: rgba(37, 244, 238, 0.06);
-  }
-  .account-row input[type="checkbox"] {
-    accent-color: var(--cyan);
-    width: 18px; height: 18px;
-    flex: none;
-  }
-  .account-platform {
-    text-transform: capitalize;
-    font-weight: 600;
-    font-size: 0.9rem;
-  }
-  .account-handle {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-  }
-  .empty-hint {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    padding: 14px;
-    border: 1px dashed var(--border);
-    border-radius: var(--radius-md);
-    text-align: center;
   }
 
-  /* ---------- Send button ---------- */
-  .send-btn {
+  .preview-thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #eee;
+  }
+
+  .preview-thumb img, .preview-thumb video {
     width: 100%;
-    margin-top: 26px;
-    padding: 15px 20px;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .preview-details { flex: 1; min-width: 0; }
+
+  .preview-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .preview-meta {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+  }
+
+  .preview-change {
+    padding: 8px 16px;
+    background: transparent;
+    border: 1.5px solid var(--border-strong);
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: var(--font-body);
+  }
+
+  .preview-change:hover {
+    border-color: var(--text);
+    color: var(--text);
+  }
+
+  /* ===== FORM BODY ===== */
+  .form-body {
+    padding: 24px;
+  }
+
+  .field { margin-bottom: 24px; }
+  .field:last-child { margin-bottom: 0; }
+
+  .field-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .field-label {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  .field-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: var(--radius-full);
+    background: var(--accent-light);
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .field-badge.optional {
+    background: #f0f0f5;
+    color: var(--text-muted);
+  }
+
+  /* Caption */
+  .caption-field {
+    position: relative;
+  }
+
+  .caption-input {
+    width: 100%;
+    min-height: 100px;
+    padding: 14px 16px;
+    background: #f8f8fa;
+    border: 1.5px solid transparent;
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--text);
+    resize: none;
+    transition: all var(--transition-fast);
+    line-height: 1.6;
+  }
+
+  .caption-input::placeholder { color: var(--text-muted); }
+
+  .caption-input:focus {
+    outline: none;
+    background: var(--surface);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-light);
+  }
+
+  .caption-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  .caption-hint {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .char-counter {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    padding: 4px 10px;
+    background: #f0f0f5;
+    border-radius: var(--radius-full);
+    transition: all var(--transition-fast);
+  }
+
+  .char-counter.warning { background: rgba(255,204,0,0.15); color: #cc8800; }
+  .char-counter.danger { background: var(--error-bg); color: var(--error); }
+
+  /* ===== ACCOUNTS LIST ===== */
+  .accounts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .account-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: #f8f8fa;
+    border: 1.5px solid transparent;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    user-select: none;
+  }
+
+  .account-item:hover {
+    background: #f0f0f5;
+  }
+
+  .account-item.selected {
+    background: var(--accent-light);
+    border-color: var(--accent);
+  }
+
+  .account-check {
+    width: 22px;
+    height: 22px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--border-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all var(--transition-fast);
+    background: var(--surface);
+  }
+
+  .account-item.selected .account-check {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .account-check svg {
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all var(--transition-bounce);
+  }
+
+  .account-item.selected .account-check svg {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .account-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+
+  .account-icon.tiktok {
+    background: linear-gradient(135deg, #25f4ee, #fe2c55);
+  }
+
+  .account-icon.default {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+  }
+
+  .account-info { flex: 1; min-width: 0; }
+
+  .account-platform {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text);
+    text-transform: capitalize;
+  }
+
+  .account-handle {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 1px;
+  }
+
+  .account-status {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    background: var(--success-bg);
+    color: var(--success);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .accounts-empty {
+    padding: 32px 20px;
+    text-align: center;
+    background: #f8f8fa;
+    border-radius: var(--radius-md);
+    border: 2px dashed var(--border-strong);
+  }
+
+  .accounts-empty-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 12px;
+    background: #f0f0f5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .accounts-empty-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+  }
+
+  .accounts-empty-text {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  /* TikTok Privacy */
+  .privacy-field {
+    display: none;
+    animation: slideIn 0.3s var(--transition-smooth);
+  }
+
+  .privacy-field.visible { display: block; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .privacy-select {
+    width: 100%;
+    padding: 14px 16px;
+    padding-right: 44px;
+    background: #f8f8fa;
+    border: 1.5px solid transparent;
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--text);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b6b8d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    transition: all var(--transition-fast);
+  }
+
+  .privacy-select:focus {
+    outline: none;
+    border-color: var(--accent);
+    background-color: var(--surface);
+    box-shadow: 0 0 0 4px var(--accent-light);
+  }
+
+  .privacy-select option[value=""] { color: var(--text-muted); }
+
+  /* ===== SUBMIT BUTTON ===== */
+  .submit-section {
+    padding: 20px 24px 24px;
+    background: #fafafa;
+    border-top: 1px solid var(--border);
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 16px 24px;
+    background: var(--accent);
     border: none;
     border-radius: var(--radius-md);
     font-family: var(--font-display);
-    font-weight: 700;
     font-size: 1rem;
-    letter-spacing: 0.01em;
-    color: #06060a;
-    background: linear-gradient(95deg, var(--cyan), var(--pink));
+    font-weight: 700;
+    color: white;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     position: relative;
     overflow: hidden;
-    transition: transform 0.1s ease, opacity 0.15s ease;
+    transition: all var(--transition-fast);
   }
-  .send-btn:active { transform: scale(0.99); }
-  .send-btn:disabled { cursor: default; opacity: 0.9; }
-  .send-btn .btn-label { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 8px; }
-  .send-btn .btn-progress {
+
+  .submit-btn:hover:not(:disabled) {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(255,45,85,0.35);
+  }
+
+  .submit-btn:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  .submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  .submit-btn-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .submit-btn-progress {
     position: absolute;
     inset: 0;
-    width: 0%;
-    background: rgba(6, 6, 10, 0.28);
-    transition: width 0.12s linear;
+    background: rgba(0,0,0,0.15);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.1s linear;
   }
-  .send-btn .spinner {
-    width: 15px; height: 15px;
+
+  .submit-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
     border-radius: 50%;
-    border: 2px solid rgba(6,6,10,0.35);
-    border-top-color: #06060a;
     animation: spin 0.7s linear infinite;
     display: none;
   }
-  .send-btn.is-loading .spinner { display: inline-block; }
-  @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ---------- Toast ---------- */
-  .toast {
+  .submit-btn.loading .submit-spinner { display: block; }
+  .submit-btn.loading .submit-icon { display: none; }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .submit-btn-count {
+    font-family: var(--font-body);
+    font-weight: 500;
+    opacity: 0.9;
+  }
+
+  /* ===== TOAST ===== */
+  .toast-container {
     position: fixed;
-    left: 50%;
     bottom: 24px;
-    transform: translate(-50%, 12px);
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--cyan);
-    color: var(--text);
-    padding: 13px 18px;
-    border-radius: var(--radius-md);
-    font-size: 0.88rem;
-    max-width: calc(100% - 32px);
-    width: 460px;
-    box-shadow: 0 20px 40px -20px rgba(0,0,0,0.7);
-    opacity: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    width: calc(100% - 32px);
+    max-width: 400px;
     pointer-events: none;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    z-index: 50;
   }
-  .toast.is-visible { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
-  .toast.is-error { border-left-color: var(--pink); }
-  .toast.is-success { border-left-color: var(--success); }
 
-  .footer-note {
-    text-align: center;
+  .toast {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    box-shadow: var(--shadow-xl);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: all 0.3s var(--transition-smooth);
+    pointer-events: auto;
+    border-left: 4px solid var(--accent);
+  }
+
+  .toast.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .toast.success { border-left-color: var(--success); }
+  .toast.error { border-left-color: var(--error); }
+
+  .toast-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .toast.success .toast-icon { background: var(--success-bg); color: var(--success); }
+  .toast.error .toast-icon { background: var(--error-bg); color: var(--error); }
+
+  .toast-message {
+    flex: 1;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .toast-close {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
     color: var(--text-muted);
-    font-size: 0.78rem;
-    margin-top: 22px;
+    transition: color var(--transition-fast);
   }
 
-  @media (max-width: 420px) {
-    .card { padding: 16px; border-radius: 16px; }
-    .dropzone { min-height: 160px; }
+  .toast-close:hover { color: var(--text); }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .footer a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 480px) {
+    .header { padding: 12px 16px; }
+    .main { padding: 16px 12px 100px; }
+    .form-body { padding: 20px; }
+    .submit-section { padding: 16px 20px 20px; }
+    .upload-area { min-height: 240px; padding: 24px 16px; }
+    .upload-icon-wrap { width: 64px; height: 64px; }
+    .upload-actions { flex-direction: column; width: 100%; }
+    .upload-btn { width: 100%; justify-content: center; }
+    .brand-icon { width: 36px; height: 36px; }
+    .brand-text h1 { font-size: 1rem; }
+    .status-badge span { display: none; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Dark mode hint - respects system preference */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0a0a0f;
+      --surface: #14141d;
+      --surface-elevated: #1b1b27;
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.15);
+      --text: #f5f5fa;
+      --text-secondary: #a0a0b8;
+      --text-muted: #6b6b8d;
+      --accent-light: rgba(255,45,85,0.15);
+      --secondary-light: rgba(0,199,190,0.15);
+      --success-bg: rgba(52,199,89,0.15);
+      --error-bg: rgba(255,59,48,0.15);
+    }
+
+    body { background: var(--bg); }
+
+    .header {
+      background: rgba(10,10,15,0.85);
+      border-bottom-color: var(--border);
+    }
+
+    .upload-section { background: linear-gradient(180deg, var(--surface-elevated), #101018); }
+
+    .caption-input, .account-item, .privacy-select {
+      background: var(--surface-elevated);
+    }
+
+    .caption-input:focus, .privacy-select:focus {
+      background: var(--surface);
+    }
+
+    .submit-section { background: var(--bg); }
+
+    .char-counter { background: var(--surface-elevated); }
+    .char-counter.warning { background: rgba(255,204,0,0.15); }
+    .char-counter.danger { background: var(--error-bg); }
+
+    .toast { background: var(--surface-elevated); }
+
+    .preview-remove {
+      background: rgba(255,255,255,0.85);
+    }
+
+    .preview-info { background: var(--surface); }
   }
 </style>
 </head>
 <body>
-<div class="page">
+<div class="app">
 
-  <div class="brand">
-    <div class="brand-mark" aria-hidden="true">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <path d="M4 13.5L10 19.5L20 6.5" stroke="url(#g)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-        <defs>
-          <linearGradient id="g" x1="4" y1="6" x2="20" y2="19" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#25f4ee"/>
-            <stop offset="1" stop-color="#fe2c55"/>
-          </linearGradient>
-        </defs>
-      </svg>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="white"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>TikTok Automation</h1>
+          <p>by Umair Hassan</p>
+        </div>
+      </div>
+      <div class="status-badge">
+        <span class="status-dot"></span>
+        <span>Ready</span>
+      </div>
     </div>
-    <div class="brand-text">
-      <h1>
-        <span class="layer layer--cyan" aria-hidden="true">TikTok Automation</span>
-        <span class="layer layer--pink" aria-hidden="true">TikTok Automation</span>
-        <span>TikTok Automation</span>
-      </h1>
-      <p>by <strong>Umair Hassan</strong></p>
-    </div>
-  </div>
+  </header>
 
-  <div class="card">
-
+  <!-- Main Content -->
+  <main class="main">
     {% if error %}
-      <div class="banner error">{{ error }}</div>
+    <div class="error-banner">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 8v4M12 16h.01"/>
+      </svg>
+      <span>{{ error }}</span>
+    </div>
     {% endif %}
 
     <form id="post-form" action="{{ url_for('create_post') }}" method="POST" enctype="multipart/form-data" novalidate>
 
-      <div class="field">
-        <label class="field-label">Video / image</label>
+      <!-- Upload Section -->
+      <div class="form-card">
+        <div class="upload-section">
+          <div class="upload-area" id="upload-area">
+            <!-- Hidden file inputs -->
+            <input type="file" id="image-input" accept="image/*" hidden>
+            <input type="file" id="video-input" accept="video/*" hidden>
+            <input type="file" id="media-input" name="media" hidden>
 
-        <!-- Two separate pickers (instead of one accept="image/*,video/*" input) —
-             a single input mixing image/video accept types is unreliable on many
-             Android browsers/WebViews and can silently fail to offer videos. -->
-        <div class="pick-buttons">
-          <button type="button" class="pick-btn" id="pick-image-btn">📷 Choose Image</button>
-          <button type="button" class="pick-btn" id="pick-video-btn">🎥 Choose Video</button>
-        </div>
-        <input type="file" id="image-pick-input" accept="image/*" style="display:none">
-        <input type="file" id="video-pick-input" accept="video/*" style="display:none">
-        <!-- Hidden input actually submitted with the form -->
-        <input type="file" id="media-input" name="media" style="display:none">
-
-        <div class="dropzone" id="dropzone" tabindex="0">
-          <div class="dropzone-empty" id="dropzone-empty">
-            <div class="dropzone-icon" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M12 16V4M12 4L7 9M12 4l5 5" stroke="#f5f5fa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3" stroke="#f5f5fa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
+            <!-- Upload Prompt -->
+            <div class="upload-prompt" id="upload-prompt">
+              <div class="upload-icon-wrap">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ff2d55" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+              </div>
+              <div class="upload-title">Add your content</div>
+              <div class="upload-subtitle">Drag and drop or choose from your device</div>
+              <div class="upload-actions">
+                <button type="button" class="upload-btn" id="pick-image">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <path d="M21 15l-5-5L5 21"/>
+                  </svg>
+                  Image
+                </button>
+                <button type="button" class="upload-btn primary" id="pick-video">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="6" width="20" height="12" rx="2"/>
+                    <polygon points="10 10 16 12 10 14" fill="currentColor" stroke="none"/>
+                  </svg>
+                  Video
+                </button>
+              </div>
             </div>
-            <div class="dropzone-title">Choose image/video above, or drag a file here</div>
-            <div class="dropzone-hint">MP4, MOV, WEBM, JPG or PNG · up to 500MB</div>
-          </div>
-          <div class="dropzone-preview" id="dropzone-preview">
-            <button type="button" class="file-remove" id="file-remove" aria-label="Remove file">✕</button>
-            <div class="file-chip" id="file-chip"></div>
+
+            <!-- Preview -->
+            <div class="upload-preview" id="upload-preview">
+              <img id="preview-img" class="preview-media" style="display:none" alt="Preview">
+              <video id="preview-video" class="preview-media" style="display:none" muted playsinline loop></video>
+              <div class="preview-overlay">
+                <div class="preview-type" id="preview-type">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                  </svg>
+                  <span>Image</span>
+                </div>
+                <button type="button" class="preview-remove" id="preview-remove" aria-label="Remove file">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff3b30" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="preview-info">
+                <div class="preview-thumb">
+                  <img id="thumb-img" alt="">
+                  <video id="thumb-video" muted style="display:none"></video>
+                </div>
+                <div class="preview-details">
+                  <div class="preview-name" id="preview-name">filename.jpg</div>
+                  <div class="preview-meta" id="preview-meta">2.4 MB</div>
+                </div>
+                <button type="button" class="preview-change" id="preview-change">Change</button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="field">
-        <label class="field-label" for="content">Caption <span class="field-optional">(optional)</span></label>
-        <textarea id="content" name="content" rows="4" maxlength="2200" placeholder="Write a caption… (optional)"></textarea>
-        <div class="char-count"><span id="char-count">0</span>/2200</div>
-      </div>
+        <!-- Form Body -->
+        <div class="form-body">
+          <!-- Caption -->
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label" for="caption">Caption</label>
+              <span class="field-badge optional">Optional</span>
+            </div>
+            <div class="caption-field">
+              <textarea id="caption" name="content" class="caption-input" maxlength="2200" placeholder="Write a caption that captures attention..."></textarea>
+              <div class="caption-footer">
+                <span class="caption-hint">Max 2,200 characters</span>
+                <span class="char-counter" id="char-counter">0/2200</span>
+              </div>
+            </div>
+          </div>
 
-      <div class="field">
-        <label class="field-label">Send to</label>
-        <div class="accounts" id="accounts">
-          {% if accounts %}
-            {% for account in accounts %}
-              <label class="account-row">
-                <input type="checkbox" name="platforms" value="{{ account.platform }}|{{ account.id }}">
-                <span>
-                  <span class="account-platform">{{ account.platform }}</span>
-                  {% if account.platform != 'tiktok' %}
-                  <span class="account-handle"> · @{{ account.username }}</span>
-                  {% endif %}
-                </span>
-              </label>
-            {% endfor %}
-          {% else %}
-            <div class="empty-hint">No connected accounts yet. Connect one in your Zernio dashboard first.</div>
-          {% endif %}
+          <!-- Accounts -->
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">Send to</label>
+              <span class="field-badge" id="selected-count" style="display:none">0 selected</span>
+            </div>
+            <div class="accounts-list" id="accounts-list">
+              {% if accounts %}
+                {% for account in accounts %}
+                <label class="account-item" data-platform="{{ account.platform }}">
+                  <input type="checkbox" name="platforms" value="{{ account.platform }}|{{ account.id }}" hidden>
+                  <div class="account-check">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </div>
+                  <div class="account-icon {% if account.platform == 'tiktok' %}tiktok{% else %}default{% endif %}">
+                    {% if account.platform == 'tiktok' %}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.7 0.72 2.89 2.89 0 0 1 2.31-5.03V7.52a6.06 6.06 0 0 0-5.52 6.28 6.05 6.05 0 0 0 6.05 6.05 6.05 6.05 0 0 0 6.05-6.05V9.32a8.52 8.52 0 0 0 3.66 0.78V6.69h-0.63z"/>
+                    </svg>
+                    {% else %}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                      <path d="M20 6L9 17l-5-5"/>
+                    </svg>
+                    {% endif %}
+                  </div>
+                  <div class="account-info">
+                    <div class="account-platform">{{ account.platform }}</div>
+                    {% if account.username %}
+                    <div class="account-handle">@{{ account.username }}</div>
+                    {% endif %}
+                  </div>
+                  <span class="account-status">Live</span>
+                </label>
+                {% endfor %}
+              {% else %}
+                <div class="accounts-empty">
+                  <div class="accounts-empty-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                      <line x1="9" y1="9" x2="9.01" y2="9"/>
+                      <line x1="15" y1="9" x2="15.01" y2="9"/>
+                    </svg>
+                  </div>
+                  <div class="accounts-empty-title">No accounts connected</div>
+                  <div class="accounts-empty-text">Connect an account in your Zernio dashboard first</div>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- TikTok Privacy -->
+          <div class="field privacy-field" id="privacy-field">
+            <div class="field-header">
+              <label class="field-label" for="tiktok_privacy">TikTok visibility</label>
+              <span class="field-badge">Required</span>
+            </div>
+            <select id="tiktok_privacy" name="tiktok_privacy" class="privacy-select">
+              <option value="">Choose who can see this...</option>
+              <option value="PUBLIC_TO_EVERYONE">Public - Everyone can see</option>
+              <option value="MUTUAL_FOLLOW_FRIENDS">Friends - Mutual followers only</option>
+              <option value="FOLLOWER_OF_CREATOR">Followers - Your followers only</option>
+              <option value="SELF_ONLY">Private - Only you can see</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Submit Section -->
+        <div class="submit-section">
+          <button type="submit" class="submit-btn" id="submit-btn">
+            <div class="submit-btn-progress" id="submit-progress"></div>
+            <div class="submit-btn-content">
+              <svg class="submit-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"/>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+              <div class="submit-spinner"></div>
+              <span id="submit-text">Send Post</span>
+            </div>
+          </button>
         </div>
       </div>
-
-      <div class="field" id="tiktok-privacy-field" style="display:none;">
-        <label class="field-label" for="tiktok_privacy">TikTok visibility</label>
-        <select id="tiktok_privacy" name="tiktok_privacy">
-          <option value="">Choose who can see this…</option>
-          <option value="PUBLIC_TO_EVERYONE">Public — everyone</option>
-          <option value="MUTUAL_FOLLOW_FRIENDS">Friends (mutual followers)</option>
-          <option value="FOLLOWER_OF_CREATOR">Followers only</option>
-          <option value="SELF_ONLY">Private — only me</option>
-        </select>
-      </div>
-
-      <button type="submit" class="send-btn" id="send-btn">
-        <span class="btn-progress" id="btn-progress"></span>
-        <span class="btn-label">
-          <span class="spinner" aria-hidden="true"></span>
-          <span id="btn-text">Send</span>
-        </span>
-      </button>
-
     </form>
-  </div>
 
-  <p class="footer-note">TikTok Automation · built by Umair Hassan</p>
+    <footer class="footer">
+      Built with care by <a href="#">Umair Hassan</a>
+    </footer>
+  </main>
 </div>
 
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<!-- Toast Container -->
+<div class="toast-container">
+  <div class="toast" id="toast">
+    <div class="toast-icon" id="toast-icon">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+    <span class="toast-message" id="toast-message"></span>
+    <button type="button" class="toast-close" id="toast-close">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+</div>
 
 <script>
-(function () {
-  var form = document.getElementById('post-form');
-  var dropzone = document.getElementById('dropzone');
-  var mediaInput = document.getElementById('media-input');
-  var imagePickInput = document.getElementById('image-pick-input');
-  var videoPickInput = document.getElementById('video-pick-input');
-  var pickImageBtn = document.getElementById('pick-image-btn');
-  var pickVideoBtn = document.getElementById('pick-video-btn');
-  var preview = document.getElementById('dropzone-preview');
-  var fileChip = document.getElementById('file-chip');
-  var fileRemove = document.getElementById('file-remove');
-  var contentField = document.getElementById('content');
-  var charCount = document.getElementById('char-count');
-  var accountsWrap = document.getElementById('accounts');
-  var tiktokField = document.getElementById('tiktok-privacy-field');
-  var tiktokSelect = document.getElementById('tiktok_privacy');
-  var sendBtn = document.getElementById('send-btn');
-  var btnText = document.getElementById('btn-text');
-  var btnProgress = document.getElementById('btn-progress');
-  var toast = document.getElementById('toast');
-  var previewObjectUrl = null;
+(function() {
+  // DOM Elements
+  const form = document.getElementById('post-form');
+  const uploadArea = document.getElementById('upload-area');
+  const imageInput = document.getElementById('image-input');
+  const videoInput = document.getElementById('video-input');
+  const mediaInput = document.getElementById('media-input');
+  const pickImageBtn = document.getElementById('pick-image');
+  const pickVideoBtn = document.getElementById('pick-video');
+  const previewImg = document.getElementById('preview-img');
+  const previewVideo = document.getElementById('preview-video');
+  const thumbImg = document.getElementById('thumb-img');
+  const thumbVideo = document.getElementById('thumb-video');
+  const previewRemove = document.getElementById('preview-remove');
+  const previewChange = document.getElementById('preview-change');
+  const previewName = document.getElementById('preview-name');
+  const previewMeta = document.getElementById('preview-meta');
+  const previewType = document.getElementById('preview-type');
+  const captionField = document.getElementById('caption');
+  const charCounter = document.getElementById('char-counter');
+  const accountsList = document.getElementById('accounts-list');
+  const privacyField = document.getElementById('privacy-field');
+  const privacySelect = document.getElementById('tiktok_privacy');
+  const submitBtn = document.getElementById('submit-btn');
+  const submitText = document.getElementById('submit-text');
+  const submitProgress = document.getElementById('submit-progress');
+  const selectedCount = document.getElementById('selected-count');
+  const toast = document.getElementById('toast');
+  const toastIcon = document.getElementById('toast-icon');
+  const toastMessage = document.getElementById('toast-message');
+  const toastClose = document.getElementById('toast-close');
 
-  // ---- Caption char count ----
-  contentField.addEventListener('input', function () {
-    charCount.textContent = contentField.value.length;
-  });
+  let currentFile = null;
+  let objectUrl = null;
+  let toastTimer = null;
 
-  // ---- Media preview ----
-  function renderPreview(file) {
-    if (previewObjectUrl) { URL.revokeObjectURL(previewObjectUrl); }
-    var existing = preview.querySelector('video, img');
-    if (existing) existing.remove();
-
-    previewObjectUrl = URL.createObjectURL(file);
-    var el;
-    if (file.type.indexOf('video') === 0) {
-      el = document.createElement('video');
-      el.src = previewObjectUrl;
-      el.muted = true;
-      el.playsInline = true;
-      el.autoplay = true;
-      el.loop = true;
-    } else {
-      el = document.createElement('img');
-      el.src = previewObjectUrl;
-      el.alt = 'Selected media preview';
-    }
-    preview.insertBefore(el, preview.firstChild);
-    fileChip.textContent = file.name;
-    dropzone.classList.add('has-file');
+  // === Helpers ===
+  function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   }
 
-  function clearMedia() {
-    mediaInput.value = '';
-    imagePickInput.value = '';
-    videoPickInput.value = '';
-    dropzone.classList.remove('has-file');
-    var existing = preview.querySelector('video, img');
-    if (existing) existing.remove();
-    if (previewObjectUrl) { URL.revokeObjectURL(previewObjectUrl); previewObjectUrl = null; }
+  function showToast(message, type = 'success') {
+    toast.className = 'toast ' + type;
+    toastMessage.textContent = message;
+    toastIcon.innerHTML = type === 'success'
+      ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>'
+      : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+
+    clearTimeout(toastTimer);
+    setTimeout(() => toast.classList.add('visible'), 10);
+    toastTimer = setTimeout(() => toast.classList.remove('visible'), 5000);
   }
 
-  // Helper: push a picked file into the real "media" input that gets
-  // submitted with the form, then render its preview.
-  function useFile(file) {
+  // === File Handling ===
+  function handleFile(file) {
     if (!file) return;
+
+    const isVideo = file.type.startsWith('video/');
+    currentFile = file;
+
+    // Update UI
+    uploadArea.classList.add('has-media');
+
+    // Revoke previous URL
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
+    objectUrl = URL.createObjectURL(file);
+
+    // Set preview
+    if (isVideo) {
+      previewImg.style.display = 'none';
+      previewVideo.style.display = 'block';
+      previewVideo.src = objectUrl;
+      previewVideo.play();
+
+      thumbImg.style.display = 'none';
+      thumbVideo.style.display = 'block';
+      thumbVideo.src = objectUrl;
+      thumbVideo.muted = true;
+    } else {
+      previewVideo.style.display = 'none';
+      previewImg.style.display = 'block';
+      previewImg.src = objectUrl;
+
+      thumbVideo.style.display = 'none';
+      thumbImg.style.display = 'block';
+      thumbImg.src = objectUrl;
+    }
+
+    // Update file info
+    previewName.textContent = file.name;
+    previewMeta.textContent = formatFileSize(file.size);
+
+    // Update type badge
+    previewType.innerHTML = isVideo
+      ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><polygon points="10 10 16 12 10 14" fill="currentColor" stroke="none"/></svg><span>Video</span>'
+      : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Image</span>';
+
+    // Update form input
     try {
-      var dt = new DataTransfer();
+      const dt = new DataTransfer();
       dt.items.add(file);
       mediaInput.files = dt.files;
-    } catch (err) {
-      // Older browsers without DataTransfer constructor support — the
-      // preview will still show, but submission relies on mediaInput
-      // being assignable, which is true on all modern Android browsers.
-    }
-    renderPreview(file);
+    } catch (e) {}
   }
 
-  pickImageBtn.addEventListener('click', function () {
-    imagePickInput.click();
-  });
-  pickVideoBtn.addEventListener('click', function () {
-    videoPickInput.click();
-  });
+  function clearFile() {
+    currentFile = null;
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
+    objectUrl = null;
 
-  imagePickInput.addEventListener('change', function () {
-    if (imagePickInput.files && imagePickInput.files[0]) {
-      useFile(imagePickInput.files[0]);
+    uploadArea.classList.remove('has-media');
+    mediaInput.value = '';
+    imageInput.value = '';
+    videoInput.value = '';
+
+    previewVideo.pause();
+    previewVideo.src = '';
+    previewImg.src = '';
+    thumbVideo.src = '';
+    thumbImg.src = '';
+  }
+
+  // === Event Listeners ===
+  pickImageBtn.addEventListener('click', () => imageInput.click());
+  pickVideoBtn.addEventListener('click', () => videoInput.click());
+  previewChange.addEventListener('click', () => {
+    if (currentFile && currentFile.type.startsWith('video/')) {
+      videoInput.click();
+    } else {
+      imageInput.click();
     }
   });
-  videoPickInput.addEventListener('change', function () {
-    if (videoPickInput.files && videoPickInput.files[0]) {
-      useFile(videoPickInput.files[0]);
-    }
+
+  imageInput.addEventListener('change', e => {
+    if (e.target.files[0]) handleFile(e.target.files[0]);
   });
 
-  fileRemove.addEventListener('click', function (e) {
+  videoInput.addEventListener('change', e => {
+    if (e.target.files[0]) handleFile(e.target.files[0]);
+  });
+
+  previewRemove.addEventListener('click', e => {
     e.stopPropagation();
-    clearMedia();
+    clearFile();
   });
 
-  ['dragenter', 'dragover'].forEach(function (evt) {
-    dropzone.addEventListener(evt, function (e) {
+  // Drag and drop
+  ['dragenter', 'dragover'].forEach(evt => {
+    uploadArea.addEventListener(evt, e => {
       e.preventDefault();
-      dropzone.classList.add('is-dragover');
+      uploadArea.style.background = 'rgba(255,45,85,0.05)';
     });
   });
-  ['dragleave', 'drop'].forEach(function (evt) {
-    dropzone.addEventListener(evt, function (e) {
+
+  ['dragleave', 'drop'].forEach(evt => {
+    uploadArea.addEventListener(evt, e => {
       e.preventDefault();
-      dropzone.classList.remove('is-dragover');
+      uploadArea.style.background = '';
     });
   });
-  dropzone.addEventListener('drop', function (e) {
-    var files = e.dataTransfer.files;
-    if (files && files[0]) {
-      useFile(files[0]);
-    }
-  });
-  dropzone.addEventListener('keydown', function (e) {
-    if ((e.key === 'Enter' || e.key === ' ') && !dropzone.classList.contains('has-file')) {
-      e.preventDefault();
-      pickImageBtn.click();
+
+  uploadArea.addEventListener('drop', e => {
+    const file = e.dataTransfer.files[0];
+    if (file && (file.type.startsWith('image/') || file.type.startsWith('video/'))) {
+      handleFile(file);
     }
   });
 
-  // ---- Account row highlight + TikTok privacy toggle ----
-  function isTikTokChecked() {
-    var checked = false;
-    accountsWrap.querySelectorAll('input[name="platforms"]').forEach(function (cb) {
-      if (cb.checked && cb.value.split('|')[0] === 'tiktok') checked = true;
-    });
-    return checked;
-  }
-
-  function syncTikTokField() {
-    var show = isTikTokChecked();
-    tiktokField.style.display = show ? 'block' : 'none';
-    tiktokSelect.required = show;
-    if (!show) tiktokSelect.value = '';
-  }
-
-  accountsWrap.querySelectorAll('.account-row').forEach(function (row) {
-    var cb = row.querySelector('input[type="checkbox"]');
-    row.addEventListener('click', function (e) {
-      if (e.target !== cb) { /* clicking anywhere on row toggles */ }
-    });
-    cb.addEventListener('change', function () {
-      row.classList.toggle('is-checked', cb.checked);
-      syncTikTokField();
-    });
+  // Caption character count
+  captionField.addEventListener('input', () => {
+    const len = captionField.value.length;
+    charCounter.textContent = len + '/2200';
+    charCounter.className = 'char-counter';
+    if (len > 2000) charCounter.classList.add('warning');
+    if (len >= 2200) charCounter.classList.add('danger');
   });
 
-  // ---- Toast ----
-  var toastTimer = null;
-  function showToast(message, kind) {
-    toast.textContent = message;
-    toast.className = 'toast is-visible ' + (kind === 'error' ? 'is-error' : 'is-success');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () {
-      toast.classList.remove('is-visible');
-    }, 5000);
-  }
+  // Account selection
+  const accountItems = accountsList.querySelectorAll('.account-item');
+  let tiktokSelected = false;
 
-  // ---- Submit with live upload progress ----
-  function setLoading(isLoading) {
-    sendBtn.disabled = isLoading;
-    sendBtn.classList.toggle('is-loading', isLoading);
-    if (!isLoading) {
-      btnText.textContent = 'Send';
-      btnProgress.style.width = '0%';
+  function updateSelection() {
+    let count = 0;
+    tiktokSelected = false;
+
+    accountItems.forEach(item => {
+      const checkbox = item.querySelector('input[name="platforms"]');
+      if (checkbox && checkbox.checked) {
+        count++;
+        item.classList.add('selected');
+        if (item.dataset.platform === 'tiktok') tiktokSelected = true;
+      } else {
+        item.classList.remove('selected');
+      }
+    });
+
+    if (count > 0) {
+      selectedCount.style.display = 'inline-flex';
+      selectedCount.textContent = count + ' selected';
+    } else {
+      selectedCount.style.display = 'none';
+    }
+
+    // Show/hide TikTok privacy field
+    if (tiktokSelected) {
+      privacyField.classList.add('visible');
+      privacySelect.required = true;
+    } else {
+      privacyField.classList.remove('visible');
+      privacySelect.required = false;
+      privacySelect.value = '';
     }
   }
 
-  form.addEventListener('submit', function (e) {
+  accountItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const checkbox = item.querySelector('input[name="platforms"]');
+      if (checkbox) {
+        checkbox.checked = !checkbox.checked;
+        updateSelection();
+      }
+    });
+  });
+
+  // Toast close
+  toastClose.addEventListener('click', () => {
+    toast.classList.remove('visible');
+  });
+
+  // Form submission
+  form.addEventListener('submit', e => {
     e.preventDefault();
 
-    var anyChecked = accountsWrap.querySelector('input[name="platforms"]:checked');
-    if (!anyChecked) {
-      showToast('Select at least one account to send to.', 'error');
-      return;
-    }
-    if (isTikTokChecked() && !tiktokSelect.value) {
-      showToast('Choose who can see this on TikTok.', 'error');
-      tiktokSelect.focus();
+    // Validation
+    const checkedAccounts = accountsList.querySelectorAll('input[name="platforms"]:checked');
+    if (checkedAccounts.length === 0) {
+      showToast('Select at least one account to post to', 'error');
       return;
     }
 
-    var formData = new FormData(form);
-    var xhr = new XMLHttpRequest();
+    if (tiktokSelected && !privacySelect.value) {
+      showToast('Choose who can see this on TikTok', 'error');
+      privacySelect.focus();
+      return;
+    }
 
-    setLoading(true);
-    btnText.textContent = 'Uploading… 0%';
+    // Start loading
+    submitBtn.classList.add('loading');
+    submitBtn.disabled = true;
+    submitText.textContent = 'Uploading...0%';
+    submitProgress.style.transform = 'scaleX(0)';
 
-    xhr.upload.addEventListener('progress', function (evt) {
-      if (evt.lengthComputable) {
-        var pct = Math.round((evt.loaded / evt.total) * 100);
-        btnProgress.style.width = pct + '%';
-        btnText.textContent = pct < 100 ? ('Uploading… ' + pct + '%') : 'Sending…';
+    const formData = new FormData(form);
+    const xhr = new XMLHttpRequest();
+
+    xhr.upload.addEventListener('progress', e => {
+      if (e.lengthComputable) {
+        const pct = Math.round((e.loaded / e.total) * 100);
+        submitProgress.style.transform = 'scaleX(' + (pct / 100) + ')';
+        submitText.textContent = pct < 100 ? 'Uploading...' + pct + '%' : 'Sending...';
       }
     });
 
-    xhr.addEventListener('load', function () {
-      setLoading(false);
-      var data = {};
-      try { data = JSON.parse(xhr.responseText); } catch (err) { /* ignore */ }
+    xhr.addEventListener('load', () => {
+      submitBtn.classList.remove('loading');
+      submitBtn.disabled = false;
+      submitText.textContent = 'Send Post';
+      submitProgress.style.transform = 'scaleX(0)';
+
+      let data = {};
+      try { data = JSON.parse(xhr.responseText); } catch (e) {}
 
       if (xhr.status >= 200 && xhr.status < 300 && data.success) {
-        showToast(data.message || 'Sent!', 'success');
+        showToast(data.message || 'Post sent successfully!', 'success');
+        // Reset form
         form.reset();
-        clearMedia();
-        charCount.textContent = '0';
-        accountsWrap.querySelectorAll('.account-row').forEach(function (row) {
-          row.classList.remove('is-checked');
-        });
-        syncTikTokField();
+        clearFile();
+        charCounter.textContent = '0/2200';
+        accountItems.forEach(item => item.classList.remove('selected'));
+        selectedCount.style.display = 'none';
+        privacyField.classList.remove('visible');
       } else {
-        showToast((data && data.message) || 'Something went wrong. Please try again.', 'error');
+        showToast(data.message || 'Something went wrong. Please try again.', 'error');
       }
     });
 
-    xhr.addEventListener('error', function () {
-      setLoading(false);
-      showToast('Network error — please try again.', 'error');
+    xhr.addEventListener('error', () => {
+      submitBtn.classList.remove('loading');
+      submitBtn.disabled = false;
+      submitText.textContent = 'Send Post';
+      showToast('Network error. Please check your connection.', 'error');
     });
 
-    xhr.open('POST', form.getAttribute('action') || '/post');
+    xhr.open('POST', form.action || '/post');
     xhr.send(formData);
   });
 })();
 </script>
-
 </body>
 </html>
